@@ -1,0 +1,47 @@
+[
+  {
+    "id": "overall_aggregation_weights_v1",
+    "domain": "aggregation",
+    "knowledge_type": "aggregation",
+    "version": "1.0",
+    "source": "OverallScore.docx",
+    "tags": ["composite", "weights"],
+    "content": "Composite risk score = 0.50 * MedicalConditionsScore + 0.30 * MedicationAdherenceScore + 0.20 * CoverageScore"
+  },
+  {
+    "id": "overall_interpretation_v1",
+    "domain": "aggregation",
+    "knowledge_type": "interpretation",
+    "version": "1.0",
+    "source": "OverallScore.docx",
+    "tags": ["interpretation", "tiers"],
+    "content": "0.80-1.00 = Very High Risk / Complex, 0.60-0.79 = High Risk, 0.40-0.59 = Moderate Risk, 0.20-0.39 = Low-Moderate Risk, 0.00-0.19 = Low Risk"
+  },
+  {
+    "id": "overall_recommendations_v1",
+    "domain": "aggregation",
+    "knowledge_type": "classification",
+    "version": "1.0",
+    "source": "OverallScore.docx",
+    "tags": ["recommendations", "interventions"],
+    "content": "Very High Risk: Complex case management. High Risk: Chronic condition coaching. Moderate Risk: Tele-coaching. Low-Moderate Risk: Preventive care. Low Risk: Standard management."
+  },
+  {
+    "id": "overall_validation_v1",
+    "domain": "aggregation",
+    "knowledge_type": "validation",
+    "version": "1.0",
+    "source": "OverallScore.docx",
+    "tags": ["validation"],
+    "content": "All domain scores must be in [0,1]. Missing scores must be imputed. Same measurement period required."
+  },
+  {
+    "id": "overall_methodology_v1",
+    "domain": "aggregation",
+    "knowledge_type": "methodology",
+    "version": "1.0",
+    "source": "OverallScore.docx",
+    "tags": ["methodology"],
+    "content": "The composite score integrates coverage, medication adherence, and medical conditions risk scores into a single normalized measure of overall health risk."
+  }
+]

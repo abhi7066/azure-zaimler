@@ -1,0 +1,56 @@
+[
+  {
+    "id": "med_adherence_methodology_v1",
+    "domain": "medication_adherence",
+    "knowledge_type": "methodology",
+    "version": "1.0",
+    "source": "MedicationAdherence.docx",
+    "tags": ["adherence"],
+    "content": "Medication adherence risk is computed at the medication level and aggregated across medications using duration-weighted averaging, producing a final score between 0 and 1."
+  },
+  {
+    "id": "med_adherence_formula_v1",
+    "domain": "medication_adherence",
+    "knowledge_type": "formula",
+    "version": "1.0",
+    "source": "MedicationAdherence.docx",
+    "tags": ["formula"],
+    "content": "Per-medication risk score equals one minus the adherence ratio, where adherence ratio is total days supply divided by treatment duration and capped at one: RiskScore = 1 - min(TotalDaysSupply / DurationInDays, 1)"
+  },
+  {
+    "id": "med_adherence_aggregation_v1",
+    "domain": "medication_adherence",
+    "knowledge_type": "aggregation",
+    "version": "1.0",
+    "source": "MedicationAdherence.docx",
+    "tags": ["aggregation"],
+    "content": "Overall adherence risk = sum(weight_i * RiskScore_i) where weight_i = DurationInDays_i / sum(DurationInDays_j)"
+  },
+  {
+    "id": "med_adherence_interpretation_v1",
+    "domain": "medication_adherence",
+    "knowledge_type": "interpretation",
+    "version": "1.0",
+    "source": "MedicationAdherence.docx",
+    "tags": ["risk-levels"],
+    "content": "0.00-0.10 = Very low risk, 0.10-0.30 = Mild risk, 0.30-0.60 = Moderate risk, 0.60-0.90 = High risk, 0.90-1.00 = Severe non-adherence"
+  },
+  {
+    "id": "med_adherence_validation_v1",
+    "domain": "medication_adherence",
+    "knowledge_type": "validation",
+    "version": "1.0",
+    "source": "MedicationAdherence.docx",
+    "tags": ["validation"],
+    "content": "Treatment duration must be at least one day. Total days supply must be non-negative. Fill dates must be valid and ordered."
+  },
+  {
+    "id": "med_adherence_normalization_v1",
+    "domain": "medication_adherence",
+    "knowledge_type": "normalization",
+    "version": "1.0",
+    "source": "MedicationAdherence.docx",
+    "tags": ["normalization"],
+    "content": "Adherence ratio is capped at 1.0 for risk calculation. DurationInDays = (LatestFillDate - EarliestFillDate) + 1"
+  }
+]

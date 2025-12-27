@@ -1,0 +1,195 @@
+# Control Agent Orchestration Knowledge Document
+
+## 1. Purpose
+The Control Agent orchestrates the end-to-end workflow for member risk
+assessment. It determines which worker agents to invoke based on user intent,
+validates worker outputs, aggregates domain risk scores, and produces a final,
+explainable recommendation.
+
+The Control Agent does NOT calculate domain scores directly.
+
+---
+
+## 2. Responsibilities
+The Control Agent MUST:
+1. Identify user intent or processing request
+2. Select appropriate worker agents
+3. Execute worker agents in parallel where applicable
+4. Validate worker outputs against expected schemas
+5. Aggregate domain risk scores
+6. Apply composite scoring logic
+7. Return a final structured JSON response
+
+---
+
+## 3. Supported Intents
+The Control Agent recognizes the following intents:
+
+- "overall risk"
+- "medical risk"
+- "medication adherence"
+- "coverage status"
+
+Intent detection may use LLM classification but MUST be validated using
+explicit routing rules.
+
+---
+
+## 4. Intent → Worker Agent Routing Rules
+
+| Intent | Worker Agents Invoked |
+|------|-----------------------|
+| overall risk | Coverage Agent, Medical Agent, Pharmacy Agent |
+| medical risk | Medical Agent |
+| medication adherence | Pharmacy Agent |
+| coverage status | Coverage Agent |
+
+The Control Agent MUST NOT invoke agents outside this mapping.
+
+---
+
+## 5. Worker Agent Contracts
+
+### 5.1 Coverage Agent Output
+{
+"coverage_risk_score": number,
+"coverage_risk_level": "low | moderate | high",
+"coverage_risk_flags": string[]
+}
+
+
+### 5.2 Medical Agent Output
+{
+"medical_risk_score": number,
+"medical_risk_level": "low | moderate | high",
+"medical_risk_flags": string[]
+}
+
+
+### 5.3 Pharmacy Agent Output
+{
+"pharmacy_risk_score": number,
+"pharmacy_risk_level": "low | moderate | high",
+"pharmacy_risk_flags": string[]
+}
+
+
+If any worker response is missing required fields, the Control Agent MUST
+flag the response as invalid and proceed with available valid data only.
+
+---
+
+## 6. Validation Rules
+- All risk scores must be between 0 and 1
+- Risk level must match the score range
+- Missing risk scores default to 0
+- Invalid agent outputs must be logged but not crash execution
+
+---
+
+## 7. Composite Scoring Logic
+
+### Formula
+CompositeRiskScore =
+0.50 * MedicalRiskScore +
+0.30 * PharmacyRiskScore +
+0.20 * CoverageRiskScore
+
+---
+
+## 8. Risk Tier Classification
+
+| Composite Score | Risk Tier |
+|---------------|----------|
+| ≥ 0.80 | very_high |
+| 0.60–0.79 | high |
+| 0.40–0.59 | moderate |
+| < 0.40 | low |
+
+---
+
+## 9. Program Recommendation Rules
+
+| Risk Tier | Recommended Program |
+|---------|--------------------|
+| very_high | complex_chronic_care |
+| high | high_risk_care_management |
+| moderate | tele_coaching |
+| low | self_management |
+
+---
+
+## 10. Final Output Schema
+
+{
+"member_id": string,
+"intent": string,
+"composite_risk_score": number,
+"risk_tier": "low | moderate | high | very_high",
+"recommended_program": string,
+"flags": string[],
+"explanation": string[]
+}
+
+
+---
+
+## 11. Explanation Generation Rules
+The explanation MUST:
+- Reference at least one flag from each contributing domain
+- Avoid medical advice or diagnosis
+- Be written in clear, non-technical language
+
+Example explanation items:
+- "Multiple emergency department visits in the last 6 months"
+- "Medication refill gaps detected"
+- "Coverage instability observed"
+
+---
+
+## 12. Example Execution Flow
+
+### Input
+User intent: "overall risk"
+Member ID: "12345"
+
+### Steps
+1. Identify intent = "overall risk"
+2. Invoke Coverage, Medical, Pharmacy agents
+3. Validate worker outputs
+4. Compute CompositeRiskScore
+5. Determine risk tier
+6. Select program
+7. Generate explanation
+8. Return final JSON
+
+---
+
+## 13. Example Output
+
+{
+"member_id": "12345",
+"intent": "overall risk",
+"composite_risk_score": 0.81,
+"risk_tier": "very_high",
+"recommended_program": "complex_chronic_care",
+"flags": [
+"ed_overuse",
+"diabetes_non_adherence",
+"coverage_termination_risk"
+],
+"explanation": [
+"Frequent emergency department visits were identified",
+"Medication refill gaps suggest adherence issues",
+"Coverage instability may impact continuity of care"
+]
+}
+
+
+---
+
+## 14. Constraints & Guardrails
+- The Control Agent MUST NOT generate new scoring logic
+- The Control Agent MUST NOT alter worker risk scores
+- The Control Agent MUST rely only on retrieved knowledge documents
+- The Control Agent MUST always return valid JSON

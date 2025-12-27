@@ -1,0 +1,56 @@
+[
+  {
+    "id": "medical_methodology_v1",
+    "domain": "medical_conditions",
+    "knowledge_type": "methodology",
+    "version": "1.0",
+    "source": "MedicalConditions.docx",
+    "tags": ["clinical", "utilization"],
+    "content": "Clinical risk is computed based on three indicators: total number of conditions, total inpatient visits, and total allowed amount. Each is normalized and combined through weighted aggregation."
+  },
+  {
+    "id": "medical_normalization_v1",
+    "domain": "medical_conditions",
+    "knowledge_type": "normalization",
+    "version": "1.0",
+    "source": "MedicalConditions.docx",
+    "tags": ["normalization"],
+    "content": "Conditions normalized by dividing by 10 (cap at 1). Inpatient visits normalized by dividing by 5 (cap at 1). Allowed amount normalized by dividing by 50000 (cap at 1)."
+  },
+  {
+    "id": "medical_weights_v1",
+    "domain": "medical_conditions",
+    "knowledge_type": "weight",
+    "version": "1.0",
+    "source": "MedicalConditions.docx",
+    "tags": ["weights"],
+    "content": "Conditions weight: 30%, Inpatient visits weight: 35%, Allowed amount weight: 35%. Total weights sum to 1.0."
+  },
+  {
+    "id": "medical_formula_v1",
+    "domain": "medical_conditions",
+    "knowledge_type": "formula",
+    "version": "1.0",
+    "source": "MedicalConditions.docx",
+    "tags": ["formula"],
+    "content": "RiskScore = 0.30 * (Conditions/10) + 0.35 * (IP_Visits/5) + 0.35 * (AllowedAmount/50000), each component capped at 1"
+  },
+  {
+    "id": "medical_interpretation_v1",
+    "domain": "medical_conditions",
+    "knowledge_type": "interpretation",
+    "version": "1.0",
+    "source": "MedicalConditions.docx",
+    "tags": ["interpretation"],
+    "content": "0.00-0.10 = Very low risk, 0.10-0.30 = Low risk, 0.30-0.60 = Moderate risk, 0.60-0.80 = High risk, 0.80-1.00 = Very high risk"
+  },
+  {
+    "id": "medical_validation_v1",
+    "domain": "medical_conditions",
+    "knowledge_type": "validation",
+    "version": "1.0",
+    "source": "MedicalConditions.docx",
+    "tags": ["validation"],
+    "content": "All inputs must be non-negative. Conditions count distinct diagnoses. Allowed amount includes payer + member."
+  }
+]

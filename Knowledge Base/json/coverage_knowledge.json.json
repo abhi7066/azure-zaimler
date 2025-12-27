@@ -1,0 +1,56 @@
+[
+  {
+    "id": "coverage_methodology_v1",
+    "domain": "coverage",
+    "knowledge_type": "methodology",
+    "version": "1.0",
+    "source": "MemberCoverage.docx",
+    "tags": ["coverage", "risk"],
+    "content": "Coverage risk is computed using coverage status, gender, age, and coverage months. Each input is normalized and combined using weighted aggregation to produce a risk score between 0 and 1."
+  },
+  {
+    "id": "coverage_normalization_v1",
+    "domain": "coverage",
+    "knowledge_type": "normalization",
+    "version": "1.0",
+    "source": "MemberCoverage.docx",
+    "tags": ["normalization"],
+    "content": "Age is normalized by dividing by 100 and capped at 1. Coverage months are normalized by computing (12 minus coverage months) divided by 12, resulting in a score between 0 and 1."
+  },
+  {
+    "id": "coverage_weights_v1",
+    "domain": "coverage",
+    "knowledge_type": "weight",
+    "version": "1.0",
+    "source": "MemberCoverage.docx",
+    "tags": ["weights"],
+    "content": "Status weight: Active=0.2, Terminated=0.5. Gender weight: Male=0.3, Female=0.2. Age coefficient=0.5195. Coverage coefficient=0.2597. Status coefficient=0.3247. Gender coefficient=0.1948."
+  },
+  {
+    "id": "coverage_validation_v1",
+    "domain": "coverage",
+    "knowledge_type": "validation",
+    "version": "1.0",
+    "source": "MemberCoverage.docx",
+    "tags": ["validation"],
+    "content": "Coverage months must be between 0 and 12. Age must be between 0 and 100. Coverage status must be Active or Terminated. Gender must be Male or Female."
+  },
+  {
+    "id": "coverage_formula_v1",
+    "domain": "coverage",
+    "knowledge_type": "formula",
+    "version": "1.0",
+    "source": "MemberCoverage.docx",
+    "tags": ["formula", "calculation"],
+    "content": "RiskScore = 0.3247 * StatusWeight + 0.1948 * GenderWeight + 0.5195 * AgeScore + 0.2597 * CoverageScore"
+  },
+  {
+    "id": "coverage_interpretation_v1",
+    "domain": "coverage",
+    "knowledge_type": "interpretation",
+    "version": "1.0",
+    "source": "MemberCoverage.docx",
+    "tags": ["interpretation"],
+    "content": "Coverage risk score ranges from 0 (lowest risk) to 1 (highest risk). Higher scores indicate greater risk due to coverage instability."
+  }
+]
