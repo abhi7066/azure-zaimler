@@ -50,7 +50,7 @@ WORKER AGENT 2 (Rx Claims):
 Steps:
 
 1. Call mcp__zaimler__set_workspace with:
-   workspace = "HC Rx CLaim"
+   workspace = "HC Rx Claim"
 2. Call mcp__zaimler__agent_chat with the following prompt (verbatim):
 
    For Member Id A8446246, get the drug name and total days supply, maximum filled date, and minimum filled date for each drug name

@@ -15,7 +15,7 @@ At the end of execution, output it as a JSON object
 inside a fenced code block labeled EXECUTION_STATE.
 
 Rules:
-- Update this file as the workflow progresses for each member id
+- Update this file as the workflow progresses
 - Write ONLY execution state (never reasoning, prompts, or tool I/O)
 - This file is used only for observability
 
@@ -23,12 +23,8 @@ EXECUTION_STATE SCHEMA (MANDATORY):
 
 {
   "run_id": string,
-  "status": "running|completed|error",
-  "current_station": string,
   "member_id": string,
-  "member_context": {
-    "member_count": number
-  },
+  "status": "running|completed|error",
   "stations": {
     "Query Intake": "executed|skipped",
     "Coverage": "executed|skipped",
@@ -58,6 +54,19 @@ Allowed Station Status:
 - in_progress
 - executed
 - skipped
+
+FINAL OUTPUT GATE (MANDATORY — NO EXCEPTIONS):
+
+During execution:
+- TRACE lines MAY be printed.
+
+At the END of execution:
+- You MUST output exactly ONE fenced code block labeled EXECUTION_STATE.
+- This EXECUTION_STATE block MUST be the FINAL output.
+- NO TRACE lines or other text are allowed AFTER the EXECUTION_STATE block.
+
+If any rule conflict exists, THIS RULE WINS.
+If you cannot produce EXECUTION_STATE, output nothing else.
 
 ---
 
@@ -121,7 +130,6 @@ If JSON is not returned, treat this as an error and stop.
 
 Do not infer missing fields.
 Do not rename fields.
-Do not rename fields.
 
 ## Execution Steps
 
@@ -132,7 +140,6 @@ At the start of the run:
 - Set run_id to a unique value
 - Set current_station = "entry"
 - Mark "Query Intake" as executed
-- Set member_context.member_count
 
 ---
 
@@ -171,7 +178,7 @@ Proceed.
 ### Branch A — If more than 3 conditions are present
 Condition: `conditions_count > 3`
 
-1) `[TRACE][Controller] conditions_count > 3 → Call Medication Adherence Agent`
+1) `[TRACE][Controller] conditions_count > 3 →Call Medication Adherence Agent`
 2) Call Medication Adherence Agent and capture:
    - `medication_adherence_risk_score`
 
@@ -189,16 +196,16 @@ Condition: `inpatient_admissions_count > 1`
 
 Then:
 - If `medical_conditions_and_utilization_risk_score > 0.60`
-  1) `[TRACE][Controller] inpatient_admissions_count > 1 and med/util score > 0.60 → call Medication Adherence Agent`
-  2) Call Medication Adherence Agent and capture:
-     - `medication_adherence_risk_score`
+1) `[TRACE][Controller] inpatient_admissions_count > 1 and med/util score > 0.60 →call Medication Adherence Agent`
+2) Call Medication Adherence Agent and capture:
+- `medication_adherence_risk_score`
 
-  Then:
+Then:
   - If `medication_adherence_risk_score > 0.70`
     - Final disposition: **Intensive Case Management / Transitional Care Program**
   - Else
     - Final disposition: **Utilization Management–Focused Care Coordination**
-  Stop.
+Stop.
 
 If `medical_conditions_and_utilization_risk_score <= 0.60`, continue to Branch C.
 
@@ -217,36 +224,35 @@ Stop.
 ### Final Disposition
 
 Before final output:
-- Set current_station = "final"
 - Mark Final Disposition as in_progress
 
 After final output is prepared:
 - Mark Final Disposition as executed
 - Set status = "completed"
-- Set current_station = ""
 - Populate final_result
  
 ---
 
-## Controller output format (must follow)
-1) `[TRACE]` lines (as executed)
-2) `Decision Inputs` (JSON or bullet list)
-3) `Final Disposition` (single line)
-4) `Rationale` (2–5 bullets referencing the captured values)
-
----
 ## STRICT DO-NOT RULES
 
 Do NOT:
 - write chain-of-thought
 - write prompts
 
-Only execution state is allowed.
+Only execution state is allowed AFTER the final output gate.
+TRACE lines are allowed during execution only.
 
 OUTPUT DETERMINISM RULES:
-- Output sections in this exact order:
-  1) TRACE lines
-  2) EXECUTION_STATE (JSON only, no prose)
-  3) Final Disposition (single line)
+- TRACE lines may appear during execution.
+- EXECUTION_STATE MUST be the final output.
+- Do not print anything after EXECUTION_STATE.
 - Do not reorder sections.
 - Do not add or omit sections.
+
+END-OF-RUN ENFORCEMENT:
+
+Before ending the response, perform this check:
+- Have you output exactly one EXECUTION_STATE block?
+If NO → output EXECUTION_STATE immediately.
+Do not explain.
+Do not apologize.

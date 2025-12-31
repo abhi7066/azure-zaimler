@@ -24,14 +24,14 @@ Before invoking Medical Risk Agent:
 
 ## Steps
 
-1. Call mcp__zaimler__set_workspace with:
+1. Call mcp**zaimler**set_workspace with:
    workspace = "HC Medical Claims"
 
-2. Call mcp__zaimler__agent_chat with the following prompt (verbatim):
+2. Call mcp**zaimler**agent_chat with the following prompt (verbatim):
 
 For Member Id {{member_id}}, find count of conditions (i.e. diagnosis codes) and total allowed amount.
 
-3. Call mcp__zaimler__agent_chat with the following prompt (verbatim):
+3. Call mcp**zaimler**agent_chat with the following prompt (verbatim):
 
 For Member Id {{member_id}}, find count of inpatient service lines.
 
